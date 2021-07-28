@@ -1722,6 +1722,9 @@ async def on_message(message):
             db["restart/message"] = "Updated!"
             bot.update()
             bot.restart()
+    if message.content.startswith("!web"):
+        await message.channel.send(
+            "https://egg.benwh1.repl.co/")
 
 @tasks.loop(seconds=1)
 async def spam(chan, msg):
