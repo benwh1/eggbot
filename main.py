@@ -30,10 +30,11 @@ from algorithm import Algorithm
 from analyse import analyse
 from draw_state import draw_state
 from daily_fmc import DailyFMC
+from probability import comparison, distributions
 from replit import db
 
 client = discord.Client()
-print('\n'.join(db.keys()))
+
 async def makeTmpSend(filename, filedata, messagewith, msgchn):
     f = open(filename, "w+")
     f.write(filedata)
@@ -294,6 +295,7 @@ def getAllHTML():
 
 def updatehtml():
     allhtml = getAllHTML()
+    allhtml = [allhtml[0]]
     egginfo = ""
     egginfo += "<div class=\"tab\">\n"
     #headers
@@ -564,267 +566,11 @@ def mod_date(path_to_file):
     stat = os.stat(path_to_file)
     return datetime.datetime.fromtimestamp(stat.st_mtime)
 
-#_______________for !getprob____________________
-def sumAm(a, b, cumA):
-    val = 0
-    if a > 0:
-        val = cumA[b] - cumA[a - 1]
-    else:
-        val = cumA[b]
-    return val
-
-
-def getProbText(f1, f2, pzlName, nscr):
-    f1 = int(f1)
-    f2 = int(f2)
-    nscr = int(nscr)
-    if nscr == 0:
-        nscr = 1
-    num44 = [
-        1,
-        2,
-        4,
-        10,
-        24,
-        54,
-        107,
-        212,
-        446,
-        946,
-        1948,
-        3938,
-        7808,
-        15544,
-        30821,
-        60842,
-        119000,
-        231844,
-        447342,
-        859744,
-        1637383,
-        3098270,
-        5802411,
-        10783780,
-        19826318,
-        36142146,
-        65135623,
-        116238056,
-        204900019,
-        357071928,
-        613926161,
-        1042022040,
-        1742855397,
-        2873077198,
-        4660800459,
-        7439530828,
-        11668443776,
-        17976412262,
-        27171347953,
-        40271406380,
-        58469060820,
-        83099401368,
-        115516106664,
-        156935291234,
-        208207973510,
-        269527755972,
-        340163141928,
-        418170132006,
-        500252508256,
-        581813416256,
-        657076739307,
-        719872287190,
-        763865196269,
-        784195801886,
-        777302007562,
-        742946121222,
-        683025093505,
-        603043436904,
-        509897148964,
-        412039723036,
-        317373604363,
-        232306415924,
-        161303043901,
-        105730020222,
-        65450375310,
-        37942606582,
-        20696691144,
-        10460286822,
-        4961671731,
-        2144789574,
-        868923831,
-        311901840,
-        104859366,
-        29592634,
-        7766947,
-        1508596,
-        272198,
-        26638,
-        3406,
-        70,
-        17,
-    ]
-    num33 = [
-        1,
-        2,
-        4,
-        8,
-        16,
-        20,
-        39,
-        62,
-        116,
-        152,
-        286,
-        396,
-        748,
-        1024,
-        1893,
-        2512,
-        4485,
-        5638,
-        9529,
-        10878,
-        16993,
-        17110,
-        23952,
-        20224,
-        24047,
-        15578,
-        14560,
-        6274,
-        3910,
-        760,
-        221,
-        2,
-    ]
-    maxStates4 = 10461394944000
-    maxStates3 = 181440
-    if pzlName == "3x3":
-        numTable = num33
-        pzlMaxStates = maxStates3
-    if pzlName == "4x4":
-        numTable = num44
-        pzlMaxStates = maxStates4
-    limitNum = len(numTable) - 1
-    # print(limitNum)
-    if f1 < 0:
-        f1 = 0
-    if f2 < 0:
-        f1 = 0
-        f2 = 0
-    if f1 > limitNum:
-        f1 = limitNum
-        f2 = limitNum
-    if f2 > limitNum:
-        f2 = limitNum
-    if f1 > f2:
-        f1, f2 = f2, f1
-    out = ""
-    cumP = []
-    cumA = []
-    sum = 0
-    maxV = len(numTable)
-    for i in range(0, maxV):
-        sum += numTable[i]
-        cumA.append(sum)
-        cumP.append(100 * (sum / pzlMaxStates))
-    rp = getRangeP(f1, f2, cumP)
-    out += "The probability of " + bl(pzlName) + " puzzle being optimally solved in "
-    if f1 != f2:
-        out += "range from " + bl(f1) + " to " + bl(f2) + " moves is "
-    else:
-        out += "*exactly* " + bl(f1) + " moves is "
-    out += editP(rp)
-
-    out += (
-        "\n(since there are "
-        + bl(sumAm(f1, f2, cumA))
-        + " states in that range of total "
-        + str(pzlMaxStates)
-        + " states of this puzzle)"
-    )
-    pSc = (1 - ((1 - rp / 100) ** nscr)) * 100
-    # sc = str(pSc)
-    out += (
-        "\nThe probability of getting at least one scramble within that range after "
-        + bl(str(nscr))
-        + " scrambles is "
-        + editP(pSc)
-    )
-    # print(nscr)
-    # if nscr > 100:
-#    maxi = 1
-#    maxFind = min(1000, nscr)
-#    for i in range(1, maxFind):
-#        ber = bernully(i, nscr, rp)
-#        maxi = i
-#        if ber != "[Very small]":
-#            break
-#    if bernully(maxi, nscr, rp) == "[Very small]":
-#        out += (
-#            "```Sorry, can't find chance of getting scramble exactly "
-#            + str(maxi)
-#            + " times after "
-#            + str(nscr)
-#            + " solves, it's still very small```"
-#        )
-#    else:
-#        out += "```"
-#        lasti = maxi + 17
-#        for i in range(maxi, lasti):
-#            berv = bernully(i, nscr, rp)
-#            if berv == "1 in i":
-#                berv = "[Very big]"
-#            out += (
-#                "\nChance of getting scramble exactly "
-#                + str(i)
-#                + " times after "
-#                + str(nscr)
-#                + " solves is "
-#                + berv
-#            )
-#        out += "```"
-    out += "\n\nCheck this: https://dphdmn.github.io/15puzzleprob/"
-    return out
-
-
-def bernully(k, n, p):  # k times in n tests, prob = p
-    p = p / 100
-    x1 = math.comb(n, k)
-    x2 = p ** k
-    x3 = (1 - p) ** (n - k)
-    value = Decimal(x1) * Decimal(x2) * Decimal(x3)
-    # print(bl(str(round(float(Decimal(100) / Decimal(value)), 0))))
-    return editP(value * 100).replace("*", "")
-
-
-def getRangeP(a, b, cumP):
-    val = 0
-    if a > 0:
-        val = cumP[b] - cumP[a - 1]
-    else:
-        val = cumP[b]
-    return val
-
-
-def bl(s):
-    return "**" + str(s) + "**"
-
-
-def editP(rp):
-    out = ""
-    if rp == 0:
-        return "[Very small]"
-    if rp < 1:
-        out += "1 in " + bl(str(round(float(Decimal(100) / Decimal(rp)), 0))[:-2])
-    else:
-        out += bl(str(round(float(rp), 2))) + "%"
-    return out
-
 #____________________________discord started
 @client.event
 async def on_ready():
-    print("We have logged in as {0.user}".format(client))
+    print(f"We have logged in as {client.user}")
+
     #check for message to send after a restart/update
     if "restart/channel_id" in db.keys() and "restart/message" in db.keys():
         channel_id = db["restart/channel_id"]
@@ -845,7 +591,7 @@ async def on_message(message):
         return
     if "pls" in message.content.lower():
         await message.add_reaction("eff:803888415858098217")
-    if "<@!?809437517564477522>" in message.content:
+    if client.user in message.mentions:
         await message.channel.send("You are egg, " + message.author.mention)
     if "fuck you" in message.content.lower():
         await message.channel.send("no u, " + message.author.mention)
@@ -1007,6 +753,9 @@ async def on_message(message):
         matching = [s for s in mystr if username in s]
         my_string = matching[0]
         my_string = my_string.split("\t")
+
+        if len(contentArray) == 2:
+            contentArray.append("4")
 
         # print(my_string)
         bad = False
@@ -1171,6 +920,9 @@ async def on_message(message):
         my_string = my_string.split("\t")
         # print(my_string)
 
+        if len(contentArray) == 2:
+            contentArray.append("4")
+
         bad = False
         try:
             puzzle = contentArray[2]
@@ -1246,100 +998,52 @@ async def on_message(message):
             traceback.print_exc()
             await message.channel.send(f"Please specify the puzzle size, for example: !getreq ascended 4x4```\n{repr(e)}\n```")
     if message.content.startswith("!getprob"):
-        #!getprob 4x4 30 40 1000, or !getprob 4x4 30 40, or !getprob 4x4 30
         try:
-            examples = "- !getprob <puzzle> <moves> [<moves>, <amount> || <amount] - get probability of getting N moves optimal scramble\nCommand examples:\n```!getprob 4x4 30 - get probability for 4x4 in 30 moves\n!getprob 4x4 30 40 - get probability for 4x4 from 30 to 40 moves\n!getprob 4x4 30 40 _1000 - from 30 to 40 moves, repeat 1000 times (default 100)\n!getprob 4x4 30 _1000 - 30 moves, repeat 1000 times\n!getprob 3x3 20 - 3x3 puzzle```\n"
-            contentArray = message.content.lower().split(" ")
-            arraylen = len(contentArray)
-            if arraylen == 1:
-                await message.channel.send(examples)
-            elif arraylen == 2:
-                examples = "Command should have at least 3 words in it.\n" + examples
-                await message.channel.send(examples)
-            elif arraylen == 3:
-                pzlName = contentArray[1]
-                if pzlName == "3x3" or pzlName == "4x4":
-                    num = contentArray[2]
-                    if num.isdigit():
-                        f1 = num
-                        f2 = num
-                        await message.channel.send(getProbText(f1, f2, pzlName, 100))
-                    else:
-                        examples = (
-                            "Something is wrong with your range number, most be positive integer.\n"
-                            + examples
-                        )
-                        await message.channel.send(examples)
-                else:
-                    examples = (
-                        "Something is wrong with your puzzle size (must be 4x4 or 3x3)\n"
-                        + examples
-                    )
-                    await message.channel.send(examples)
+            # !getprob [size: N or WxH] [moves: a-b or e.g. >=m, <m, =m, etc.] [repetitions: optional]
+            regex = re.compile("!getprob\s+(?P<width>[0-9]+)(x(?P<height>[0-9]+))?\s+(?P<range>((?P<moves_from>[0-9]+)-(?P<moves_to>[0-9]+))|((?P<comparison>[<>]?=?)(?P<moves>[0-9]*)))(\s+(?P<repetitions>[0-9]*))?")
+            match = regex.fullmatch(message.content)
+
+            if match is None:
+                raise SyntaxError(f"failed to parse arguments")
+
+            groups = match.groupdict()
+
+            # read the size
+            w = int(groups["width"])
+            if groups["height"] is None:
+                h = w
             else:
-                pzlName = contentArray[1]
-                if pzlName == "3x3" or pzlName == "4x4":
-                    if (
-                        arraylen == 4
-                    ):  # expect number and amount rep OR number and second number
-                        num = contentArray[2]
-                        if num.isdigit():
-                            otherThing = contentArray[3]
-                            if (
-                                otherThing[:1] == "_"
-                            ):  # thiking that this is number and amount of rep
-                                num2 = otherThing[1:]
-                                if num2.isdigit():
-                                    await message.channel.send(
-                                        getProbText(num, num, pzlName, num2)
-                                    )
-                                else:
-                                    examples = (
-                                        "Something is wrong with your range number, most be positive integer.\n"
-                                        + examples
-                                    )
-                                    await message.channel.send(examples)
-                            else:  # thinking that this number is just the 2nd range number
-                                num2 = otherThing
-                                if num2.isdigit():
-                                    await message.channel.send(
-                                        getProbText(num, num2, pzlName, 100)
-                                    )
-                                else:
-                                    examples = (
-                                        "Something is wrong with your range number, most be positive integer.\n"
-                                        + examples
-                                    )
-                                    await message.channel.send(examples)
-                        else:
-                            examples = (
-                                "Something is wrong with your range number, most be positive integer.\n"
-                                + examples
-                            )
-                            await message.channel.send(examples)
-                    else:  # we have 5 inputs
-                        num1 = contentArray[2]
-                        num2 = contentArray[3]
-                        num3 = contentArray[4]
-                        trueNum3 = num3
-                        if num3[:1] == "_":
-                            trueNum3 = num3[1:]
-                        if num1.isdigit() and num2.isdigit() and trueNum3.isdigit():
-                            await message.channel.send(
-                                getProbText(num1, num2, pzlName, trueNum3)
-                            )
-                        else:
-                            examples = (
-                                "Something is wrong with your range number, most be positive integer.\n"
-                                + examples
-                            )
-                            await message.channel.send(examples)
-                else:
-                    examples = (
-                        "Something is wrong with your puzzle size (most be 4x4 or 3x3)\n"
-                        + examples
-                    )
-                    await message.channel.send(examples)
+                h = int(groups["height"])
+
+            # get the distribution
+            dist = distributions.get_distribution(w, h)
+
+            # check if from-to or comparison, and calculate probability
+            moves_range = groups["range"]
+            if groups["comparison"] is None:
+                start = int(groups["moves_from"])
+                end = int(groups["moves_to"])
+                prob_one = dist.prob_range(start, end)
+            else:
+                comp = comparison.from_string(groups["comparison"])
+                moves = int(groups["moves"])
+                prob_one = dist.prob(moves, comp)
+
+            # number of repetitions
+            if groups["repetitions"] is None:
+                reps = 1
+            else:
+                reps = int(groups["repetitions"])
+
+            # compute the probability of a scramble appearing at least once
+            prob = 1 - (1 - prob_one)**reps
+
+            # write the message
+            msg = f"Probability of {w}x{h} having an optimal solution of {moves_range} moves is {prob_one}\n"
+            if reps > 1:
+                msg += f"Probability of at least one scramble out of {reps} within that range is {prob}"
+
+            await message.channel.send(msg)
         except Exception as e:
             traceback.print_exc()
             await message.channel.send(f"```\n{repr(e)}\n```")
@@ -1632,8 +1336,13 @@ async def on_message(message):
             solution = solver.solveOne(scramble)
             b = perf_counter()
 
+            # solution of solved puzzle = egg
+            solution_str = solution.to_string()
+            if solution_str == "":
+                solution_str = ":egg:"
+
             msg = f"Scramble: {scramble.to_string()}\n"
-            msg += f"Solution [{solution.length()}]: ||{solution.to_string()}||\n"
+            msg += f"Solution [{solution.length()}]: ||{solution_str}||\n"
             msg += f"Time: {round((b - a), 3)}"
 
             if video:
@@ -1653,12 +1362,11 @@ async def on_message(message):
     if message.content.startswith("!simplify"):
         try:
             alg = Algorithm(message.content[10:])
+            old_len = alg.length()
             alg.simplify()
+            new_len = alg.length()
             alg_str = alg.to_string()
-            if alg_str == "":
-                await message.channel.send("empty")
-            else:
-                await message.channel.send(alg_str)
+            await message.channel.send(f"[{old_len} -> {new_len}] {alg_str}")
         except Exception as e:
             traceback.print_exc()
             await message.channel.send(f"```\n{repr(e)}\n```")

@@ -11,7 +11,7 @@ class PuzzleState:
 
         state = state.strip()
         state = state.replace("\n", "/")
-        arr = [row.split(" ") for row in state.split("/")]
+        arr = [row.split() for row in state.split("/")]
         arr = [[int(x) for x in row] for row in arr]
 
         # check that all numbers from 0 to len-1 appear once

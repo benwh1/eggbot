@@ -1,7 +1,5 @@
-images/*
 tables/*
 __pycache__/*
 pyproject.toml
 poetry.lock
-all_solutions.txt
 templates/index.html
