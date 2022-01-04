@@ -10,6 +10,7 @@ import leaderboard.leaderboard as lb
 import leaderboard.tiers as tiers
 import leaderboard.categories as categories
 import leaderboard.ranking as ranking
+from helper.noneaware_extremum import n_min
 from replit import db
 
 # filters the leaderboard results, removing any results that don't correspond
@@ -42,31 +43,24 @@ def get_category_results():
 # the i'th category in leaderboard.categories.categories.
 def results_table():
     results = get_category_results()
-    users = sorted(set(x["user"] for x in results))
 
     table = {}
 
-    for user in users:
-        # create an empty row with one entry per category
-        row = [None]*len(categories.categories)
+    for result in results:
+        user = result["user"]
 
-        for result in results:
-            if result["user"] != user:
-                continue
+        if user not in table:
+            # create an empty row with one entry per category
+            row = [None]*len(categories.categories)
+            user[table] = row
 
-            category = result["category"]
+        category = result["category"]
 
-            # fill in the entry in the table with the users best time.
-            # note that there may be multiple results in the leaderboard
-            # if the user has done solves with both control schemes,
-            # so we need to choose the fastest one.
-            if row[category] is None:
-                row[category] = result["time"]
-            else:
-                row[category] = min(row[category], result["time"])
-
-        # add the users results to the table
-        table[user] = row
+        # fill in the entry in the table with the users best time.
+        # note that there may be multiple results in the leaderboard
+        # if the user has done solves with both control schemes,
+        # so we need to choose the fastest one.
+        user[table][category] = n_min(user[table][category], result["time"])
 
     return table
 
