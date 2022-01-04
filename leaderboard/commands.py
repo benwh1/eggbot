@@ -4,7 +4,7 @@ from leaderboard import tiers
 from leaderboard import ranking
 from leaderboard import db
 from leaderboard import update as lb_update
-from leaderboard import commands_helper as helper
+from helper import commands as helper
 import leaderboard.username as names
 import time_format
 
