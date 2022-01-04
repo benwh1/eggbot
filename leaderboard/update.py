@@ -52,7 +52,7 @@ def results_table():
         if user not in table:
             # create an empty row with one entry per category
             row = [None]*len(categories.categories)
-            user[table] = row
+            table[user] = row
 
         category = result["category"]
 
@@ -60,7 +60,7 @@ def results_table():
         # note that there may be multiple results in the leaderboard
         # if the user has done solves with both control schemes,
         # so we need to choose the fastest one.
-        user[table][category] = n_min(user[table][category], result["time"])
+        table[user][category] = n_min(table[user][category], result["time"])
 
     return table
 
