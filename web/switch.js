@@ -1,38 +1,24 @@
-let tierlist = ["gamma", "aleph", "ascended", "nova", "grandmaster", "master", "diamond", "platinum", "gold", "silver", "bronze", "beginner"];
-let switchBtn = $("#switch");
+import { tiers } from "./data.js"
 
-switchBtn.on("change", function(){
-    tierlist.forEach((tier) => {
-        changeTable(tier);
-    });
-});
+const tierlist = tiers.map(tier => tier.name.toLowerCase()).reverse()
+const switchBtn = document.querySelector("#switch")
 
-function changeTable(tier_table){
-    let elements = $(`#${tier_table}-table`).children(".player-row").children();
+switchBtn.addEventListener("change", () => tierlist.forEach(tier => changeTable(tier)))
 
-    $(elements).each((i) => {
-        let element = $(elements[i]);
-        let tier = element.attr("tier");
+function changeTable(tier_table) {
+    document.querySelectorAll(`#${tier_table}-table .player-row *`).forEach((element, i) => {
+        const tier = element.getAttribute("tier")
 
-        if(tier) {
-            if(tierlist.indexOf(tier) <= tierlist.indexOf(tier_table)){
-                if(tierlist.indexOf(tier) < tierlist.indexOf(tier_table)){
-                    if(switchBtn.is(":checked")){
-                        $(element).css("font-weight", 800);
-                    }
-                    else{
-                        $(element).css("font-weight", "");
-                    }
-                }
-            }
-            else{
-                if(switchBtn.is(":checked")){
-                    $(element).css("background-color", "grey");
-                }
-                else{
-                    $(element).css("background-color", "");
-                }
-            }
+        if (!tier) return;
+        if (tierlist.indexOf(tier) <= tierlist.indexOf(tier_table)) {
+            tierlist.indexOf(tier) < tierlist.indexOf(tier_table) &&
+                (switchBtn.checked
+                    ? (element.style.fontWeight = 800)
+                    : (element.style.fontWeight = ""))
+        } else {
+            switchBtn.checked
+                ? (element.style.backgroundColor = "grey")
+                : (element.style.backgroundColor = "")
         }
     });
 }
