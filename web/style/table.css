@@ -1,138 +1,113 @@
 /* whole table */
 
 .results-table {
-  padding-top: var(--header_height);
-  width: max-content;
-  margin: auto;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    padding-top: var(--header_height);
+    width: max-content;
+    margin: auto;
+    text-align: center;
 }
 
-.rank-table-wrapper {
-  width: 100%;
+.table-wrapper {
+    width: 100%;
 }
 
-.rank-table-wrapper > table {
-  width: 100%;
+.table-wrapper > table {
+    width: 100%;
 }
 
 .results-table td {
-  padding: 0 12px;
-  font-weight: 500;
-  font-size: 12px;
+    padding: 0 12px;
+    font-weight: 500;
+    font-size: 12px;
 }
 
 /* table header */
+
 .table-header {
-  position: sticky;
-  top: var(--header_height);
-  z-index: 1;
-  color: rgb(220, 220, 220);
-  background-color: #1b1e24;
+    position: sticky;
+    top: var(--header_height);
+    z-index: 1;
+    color: rgb(220, 220, 220);
+    background-color: #1b1e24;
 }
 
 .tier-row td {
-  height: 50px;
-  padding-left: 1.5rem;
-  font-size: 1.5rem;
-  text-align: left;
+    height: 50px;
+    padding-left: 1.5rem;
+    font-size: 1.5rem;
+    text-align: left;
 }
 
 .req-row td {
-  height: 40px;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-  min-width: 60px;
-  width: max-content;
+    width: max-content;
+    min-width: 60px;
+    height: 40px;
+    font-weight: bold;
+    letter-spacing: .5px;
 }
 
 .events-row {
-  height: 50px;
-  color: rgb(170, 170, 170);
+    height: 50px;
+    color: rgb(170, 170, 170);
 }
 
 /* player rows */
+
 .player-row {
-  height: 40px;
+    height: 40px;
 }
 
 .player-row td[onclick] {
-  cursor: pointer;
-  text-decoration: underline;
-  transition: 0.3s;
-  position: relative;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: .3s;
+    position: relative;
 }
 
 .player-row td[onclick]::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: #0003;
-  width: 100%;
-  height: 100%;
-  clip-path: circle(0 at 0 0);
-  transition: 0.3s;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #0003;
+    width: 100%;
+    height: 100%;
+    clip-path: circle(0 at 0 0);
+    transition: .3s;
 }
 
 .player-row td[onclick]:hover::before {
-  clip-path: circle(140% at 0 0);
+    clip-path: circle(140% at 0 0);
 }
 
-.player,
-.player-place,
-.player-power {
-  font-weight: 700 !important;
+.player, .player-place, .player-power {
+    font-weight: 700 !important;
 }
 
 .player {
-  font-size: 1.05em;
-  min-width: 100px;
-  max-width: 100px;
+    font-size: 1.05em;
+    min-width: 100px;
+    max-width: 100px;
 }
 
 .player-row:nth-child(odd) {
-  opacity: 0.9;
+    opacity: 0.9;
 }
 
 /* tiers */
-[tier="gamma"] {
-  background-color: #00ffff;
-}
-[tier="aleph"] {
-  background-color: #00ff2a;
-}
-[tier="ascended"] {
-  background-color: #ff2262;
-}
-[tier="nova"] {
-  background-color: #7900ff;
-}
-[tier="grandmaster"] {
-  background-color: #ffd700;
-}
-[tier="master"] {
-  background-color: #ec44ca;
-}
-[tier="diamond"] {
-  background-color: #b9f2ff;
-}
-[tier="platinum"] {
-  background-color: #2fcfc2;
-}
-[tier="gold"] {
-  background-color: #cab148;
-}
-[tier="silver"] {
-  background-color: #cbd9e6;
-}
-[tier="bronze"] {
-  background-color: #b45f06;
-}
-[tier="beginner"] {
-  background-color: #93c47d;
-}
-[tier="unranked"] {
-  background-color: #666666;
-}
+
+[tier="gamma"]       { background-color: #00ffff; }
+[tier="aleph"]       { background-color: #00ff2a; }
+[tier="ascended"]    { background-color: #ff2262; }
+[tier="nova"]        { background-color: #7900ff; }
+[tier="grandmaster"] { background-color: #ffd700; }
+[tier="master"]      { background-color: #ec44ca; }
+[tier="diamond"]     { background-color: #b9f2ff; }
+[tier="platinum"]    { background-color: #2fcfc2; }
+[tier="gold"]        { background-color: #cab148; }
+[tier="silver"]      { background-color: #cbd9e6; }
+[tier="bronze"]      { background-color: #b45f06; }
+[tier="beginner"]    { background-color: #93c47d; }
+[tier="unranked"]    { background-color: #666666; }
