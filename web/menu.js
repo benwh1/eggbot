@@ -10,7 +10,11 @@ const menuToggle = () => {
 };
 
 // when clicking outside the menu to close it
-document.addEventListener( "click", () => menu.classList.contains("menu-active") && menuToggle());
+document.addEventListener("click", () => {
+    if (menu.classList.contains("menu-active") {
+        menuToggle();
+    }
+});
 
 document.querySelector(".menu-btn").addEventListener("click", e => {
     e.stopPropagation();
