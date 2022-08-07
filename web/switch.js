@@ -10,15 +10,12 @@ function changeTable(tier_table) {
         const tier = element.getAttribute("tier")
 
         if (!tier) return;
-        if (tierlist.indexOf(tier) <= tierlist.indexOf(tier_table)) {
-            tierlist.indexOf(tier) < tierlist.indexOf(tier_table) &&
-                (switchBtn.checked
-                    ? (element.style.fontWeight = 800)
-                    : (element.style.fontWeight = ""))
-        } else {
-            switchBtn.checked
-                ? (element.style.backgroundColor = "grey")
-                : (element.style.backgroundColor = "")
+        let tier_index = tierlist.indexOf(tier);
+        let table_index = tierlist.indexOf(tier_table);
+        if(table_index > tier_index) {
+            element.style.fontWeight = switchBtn.checked ? 800 : "";
+        } else if(table_index < tier_index) {
+            element.style.backgroundColor = switchBtn.checked ? "grey" : "";
         }
     });
 }
