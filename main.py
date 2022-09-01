@@ -1218,13 +1218,14 @@ async def on_message(message):
             for key in db.keys():
                 my_db[key] = db[key]
             await dh.send_as_file(serialize.serialize(my_db), "db.txt", "", message.channel)
-    elif command.startwith("!getdif"):
-        contentArray = command.lower().split(" ")
-        NMlist = contentArray[1].split("x")
+    elif command.startswith("!getdif"):
+        content_array = command.lower().split(" ")
+        NMlist = content_array[1].split("x")
         n = float(NMlist[0])
         m = float(NMlist[1])
-        t = float(contentArray[2])
+        t = float(content_array[2])
         dif = (t / (n*m*(n+m))) * (1 + math.log(max(n/m, m/n)/2 + 0.5)) * math.log(n*m) * (1 + 2 ** (4.5-n*m/6)) / 4.7 * 2000
         await message.channel.send(str(dif))
+
 keep_alive()
 bot.run(os.environ["token"])
