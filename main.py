@@ -369,10 +369,10 @@ async def on_message(message):
             await message.channel.send(f"```\n{repr(e)}\n```")
     elif command.startswith("!numwrs"):
         if command == "!numwrs":
-            url = "http://slidysim2.000webhostapp.com/leaderboard/records.html"
+            url = "https://slidysim.com/records.html"
             msg = "WRs:"
         elif command == "!numwrs moves":
-            url = "http://slidysim2.000webhostapp.com/leaderboard/records_moves.html"
+            url = "https://slidysim.com/records_moves.html"
             msg = "Movecount WRs:"
 
         text = requests.get(url, timeout=5).text
@@ -434,9 +434,9 @@ async def on_message(message):
             groups = match.groupdict()
 
             if groups["is_moves"] is None:
-                url = "http://slidysim2.000webhostapp.com/leaderboard/records_all.html"
+                url = "https://slidysim.com/records_all.html"
             else:
-                url = "http://slidysim2.000webhostapp.com/leaderboard/records_all_moves.html"
+                url = "https://slidysim.com/records_all_moves.html"
 
             text = requests.get(url, timeout=5).text
             records = html2text.html2text(text).splitlines()[8:]
@@ -463,9 +463,9 @@ async def on_message(message):
 
             moves = groups["is_moves"] is not None
             if moves:
-                url = "http://slidysim2.000webhostapp.com/leaderboard/records_all_moves.html"
+                url = "https://slidysim.com/records_all_moves.html"
             else:
-                url = "http://slidysim2.000webhostapp.com/leaderboard/records_all.html"
+                url = "https://slidysim.com/records_all.html"
 
             text = requests.get(url, timeout=5).text
             records = html2text.html2text(text).splitlines()[8:]

@@ -52,7 +52,7 @@ Misc. commands:
 
 List of useful websites:
 - Ranks - https://yaytso.herokuapp.com/
-- WRs - http://slidysim2.000webhostapp.com/leaderboard/records.html
-- WRs (all) - http://slidysim2.000webhostapp.com/leaderboard/records_all.html
-- WRs (moves) - http://slidysim2.000webhostapp.com/leaderboard/records_moves.html
-- WRs (moves, all) - http://slidysim2.000webhostapp.com/leaderboard/records_all_moves.html
+- WRs - https://slidysim.com/records.html
+- WRs (all) - https://slidysim.com/records_all.html
+- WRs (moves) - https://slidysim.com/records_moves.html
+- WRs (moves, all) - https://slidysim.com/records_all_moves.html
