@@ -14,7 +14,7 @@ def get_leaderboard(width=-1, height=-1, solvetype="any", avglen=-1, pbtype="tim
         "controls"    : "km",
         "user"        : user,
         "solvedata"   : 0,
-        "version"     : "28.5"
+        "version"     : "29.0"
     }, timeout=5
     )
 
