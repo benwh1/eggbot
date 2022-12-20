@@ -1,11 +1,9 @@
-import os
-import psycopg2
+import sqlite3
 from helper import serialize as s
 
 class Database:
     def __init__(self):
-        url = os.environ["DATABASE_URL"]
-        self.conn = psycopg2.connect(url, sslmode="require")
+        self.conn = sqlite3.connect("egg.db")
 
         # local copy so we don't need to send a query every time we just want to read something
         self.local = self.query_all()
@@ -19,11 +17,7 @@ class Database:
             v = value
 
         self.local[key] = v
-        cur.execute("""
-            insert into egg (key, value) values (%s, %s)
-            on conflict(key) do
-            update set value=%s
-        """, (key, v, v))
+        cur.execute(f"insert into egg (key, value) values ('{key}', '{v}') on conflict(key) do update set value='{v}'",)
 
         self.conn.commit()
 
@@ -46,7 +40,7 @@ class Database:
         cur = self.conn.cursor()
 
         del self.local[key]
-        cur.execute("delete from egg where key=%s", (key,))
+        cur.execute(f"delete from egg where key='{key}'")
 
     def __iter__(self):
         return self.keys()

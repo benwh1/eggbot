@@ -1,3 +1,7 @@
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import scrambler
 import solver
 from solver import SolverRunType
@@ -369,10 +373,10 @@ async def on_message(message):
             await message.channel.send(f"```\n{repr(e)}\n```")
     elif command.startswith("!numwrs"):
         if command == "!numwrs":
-            url = "https://slidysim.com/records.html"
+            url = "https://slidysim.com/leaderboard/records.html"
             msg = "WRs:"
         elif command == "!numwrs moves":
-            url = "https://slidysim.com/records_moves.html"
+            url = "https://slidysim.com/leaderboard/records_moves.html"
             msg = "Movecount WRs:"
 
         text = requests.get(url, timeout=5).text
@@ -434,9 +438,9 @@ async def on_message(message):
             groups = match.groupdict()
 
             if groups["is_moves"] is None:
-                url = "https://slidysim.com/records_all.html"
+                url = "https://slidysim.com/leaderboard/records_all.html"
             else:
-                url = "https://slidysim.com/records_all_moves.html"
+                url = "https://slidysim.com/leaderboard/records_all_moves.html"
 
             text = requests.get(url, timeout=5).text
             records = html2text.html2text(text).splitlines()[8:]
@@ -463,9 +467,9 @@ async def on_message(message):
 
             moves = groups["is_moves"] is not None
             if moves:
-                url = "https://slidysim.com/records_all_moves.html"
+                url = "https://slidysim.com/leaderboard/records_all_moves.html"
             else:
-                url = "https://slidysim.com/records_all.html"
+                url = "https://slidysim.com/leaderboard/records_all.html"
 
             text = requests.get(url, timeout=5).text
             records = html2text.html2text(text).splitlines()[8:]
@@ -1227,5 +1231,5 @@ async def on_message(message):
         dif = (t / (n*m*(n+m))) * (1 + math.log(max(n/m, m/n)/2 + 0.5)) * math.log(n*m) * (1 + 2 ** (4.5-n*m/6)) / 4.7 * 2000
         await message.channel.send(str(dif))
 
-keep_alive()
+# keep_alive()
 bot.run(os.environ["token"])
