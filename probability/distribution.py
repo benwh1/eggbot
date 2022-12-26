@@ -1,5 +1,5 @@
 import numpy as np
-from numpy.polynomial.polynomial import polypow
+from numpy.polynomial.polynomial import polypow, polymul
 from probability.comparison import Comparison
 
 # represents a discrete probability distribution on the points 0, 1, ..., n
@@ -8,6 +8,9 @@ class Distribution:
         total = sum(arr)
         self.n = len(arr)-1
         self.arr = np.array([x/total for x in arr])
+
+    def __add__(self, other):
+        return Distribution(polymul(self.arr, other.arr))
 
     # sum of n iid copies of this distribution
     def sum_distribution(self, n):
