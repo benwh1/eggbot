@@ -704,7 +704,7 @@ async def on_message(message):
             # !getprob [size: N or WxH] [mean/marathon length: optional] [moves: a-b or e.g. >=m, <m, =m, etc.] [repetitions: optional]
             size_reg = regex.size("width", "height")
             relay_reg = regex.relay("relay_start", "relay_end")
-            full_size_reg = f"(?P<full_size>({size_reg})|({relay_reg}))"
+            full_size_reg = f"(?P<full_size>({size_reg}(?P<is_eut>\s*eut)?)|({relay_reg}))"
             solve_type_reg = "(?P<solve_type>(mo)|x)"
             num_solves_reg = regex.positive_integer("num_solves")
             full_solve_type_reg = "(" + solve_type_reg + num_solves_reg + ")"
@@ -744,8 +744,12 @@ async def on_message(message):
                 else:
                     h = int(groups["height"])
 
-                # distribution for a single solve
-                dist = distributions.get_distribution(w, h)
+                # check if EUT or not
+                if groups["is_eut"] is None:
+                    # distribution for a single solve
+                    dist = distributions.get_distribution(w, h)
+                else:
+                    dist = distributions.get_eut_distribution(w, h)
             else:
                 # relay start-end
                 start = int(groups["relay_start"])
