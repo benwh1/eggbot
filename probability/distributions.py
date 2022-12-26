@@ -32,3 +32,14 @@ def get_relay_distribution(start, end):
         d = d + get_distribution(i, i)
 
     return d
+
+def get_eut_distribution(w, h):
+    d = Distribution([1])
+    for x in range(2, w+1):
+        for y in range(2, h+1):
+            try:
+                d = d + get_distribution(x, y)
+            except ValueError:
+               raise ValueError(f"distribution for {w}x{h} EUT relay is not available")
+
+    return d
