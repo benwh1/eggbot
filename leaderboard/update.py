@@ -122,3 +122,5 @@ def update():
 
     # update wr list
     requests.get(os.environ["updateURL"], timeout=5).text
+
+    log.info("Finished update")
