@@ -46,6 +46,8 @@ from probability.format import format_prob
 from leaderboard import commands as lb_commands
 from leaderboard import link
 from database import db
+import manhattan
+import statistics
 
 intents = discord.Intents.default()
 intents.members = True
@@ -1234,6 +1236,38 @@ async def on_message(message):
         t = float(content_array[2])
         dif = (t / (n*m*(n+m))) * (1 + math.log(max(n/m, m/n)/2 + 0.5)) * math.log(n*m) * (1 + 2 ** (4.5-n*m/6)) / 4.7 * 2000
         await message.channel.send(str(dif))
+    elif command.startswith("!md"):
+        scr_reg = regex.puzzle_state("scramble")
+        reg = re.compile(f"!md\s*{scr_reg}")
+
+        match = reg.fullmatch(command)
+
+        if match is None:
+            raise SyntaxError(f"failed to parse arguments")
+
+        groups = match.groupdict()
+        scramble = PuzzleState(groups["scramble"])
+        w, h = scramble.size()
+
+        md = manhattan.md(scramble)
+        msg = f"md={md}"
+
+        if w == h:
+            m = manhattan.md_mean(w)
+            s = manhattan.md_variance(w)**0.5
+            dist = statistics.NormalDist(mu=m, sigma=s)
+            prob = dist.cdf(md)
+            std_diff = (md-m)/s
+
+            msg += f"\n{w}x{h} mean={m}\n"
+            msg += f"{w}x{h} std={s:.3f}\n"
+            if std_diff < 0:
+                msg += f"{md} is {-std_diff:.3f} standard deviations below the mean\n"
+            else:
+                msg += f"{md} is {std_diff:.3f} standard deviations above the mean\n"
+            msg += f"Estimated probability of {w}x{h} md<={md} is {format_prob(prob)}"
+
+        await message.reply(msg)
 
 # keep_alive()
 bot.run(os.environ["token"])
