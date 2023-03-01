@@ -639,7 +639,7 @@ async def on_message(message):
             # make sure the algorithm isn't too long
             moves = Algorithm(groups["moves"])
             num_moves = len(moves)
-            max_moves = 200
+            max_moves = 250
             if num_moves > max_moves:
                 raise ValueError(f"number of moves ({num_moves}) must be at most {max_moves}")
 
