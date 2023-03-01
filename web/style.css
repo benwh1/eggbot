@@ -7,29 +7,26 @@
 @import url("style/table.css");
 
 * {
-  font-weight: lighter;
-  font-family: "Commissioner", sans-serif;
-  font-size: 11px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  border-spacing: 0;
-  scroll-behavior: smooth;
+    font-weight: lighter;
+    font-family: "Commissioner", sans-serif;
+    font-size: 11px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-spacing: 0;
+    scroll-behavior: smooth;
 }
 
 :root {
-  --header_height: 60px;
-  --header_clr: 213 11% 19%;
+    --header_height: 60px;
+    --header_clr: 213 11% 19%;
 }
-::selection {
-  background: #2555be;
-  color: white;
-}
+::selection{background: #2555be; color: white;}
 
 body {
-  background-color: rgb(63, 72, 83);
+    background-color: rgb(63, 72, 83);
 }
 
-.overflow-hidden {
-  overflow: hidden;
+.overflow-hidden{
+    overflow: hidden;
 }
