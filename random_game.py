@@ -43,10 +43,10 @@ class RandomGame:
     async def run(self):
         self.running = True
 
+        timestamp = time.time()
+
         channel = random.choice(self.channels)
         message = await channel.send(self.message)
-
-        timestamp = time.time()
 
         db[self.db_path + "current/message_id"] = message.id
         db[self.db_path + "current/channel_id"] = message.channel.id
