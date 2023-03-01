@@ -1,10 +1,20 @@
 /* whole table */
 
 .results-table {
+    display: flex;
+    flex-direction: column;
     padding-top: var(--header_height);
-    width: 100%;
+    width: max-content;
     margin: auto;
     text-align: center;
+}
+
+.table-wrapper {
+    width: 100%;
+}
+
+.table-wrapper > table {
+    width: 100%;
 }
 
 .results-table td {
@@ -31,6 +41,8 @@
 }
 
 .req-row td {
+    width: max-content;
+    min-width: 60px;
     height: 40px;
     font-weight: bold;
     letter-spacing: .5px;

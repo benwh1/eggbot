@@ -123,6 +123,7 @@
 
 .page-header *:hover~.more-infos {
     opacity: 1;
+    pointer-events: all;
 }
 
 .more-infos {

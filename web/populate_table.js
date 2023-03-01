@@ -74,9 +74,11 @@ function populate_table(table){
         const tier_name = tier["name"].toLowerCase();
 
         // table of all results of users in this tier
+        var tier_table_wrapper = document.createElement("div");
+        tier_table_wrapper.classList.add("table-wrapper")
         var tier_table = document.createElement("table");
         tier_table.id = tier_name + "-table";
-        results_table.appendChild(tier_table);
+        results_table.appendChild(tier_table_wrapper);
 
         // set up the header rows
         var tier_head = document.createElement("thead"); // header containing the following three rows
@@ -89,6 +91,7 @@ function populate_table(table){
         tier_req_row.className = "req-row";
         tier_events_row.className = "events-row";
 
+        tier_table_wrapper.appendChild(tier_table);
         tier_table.appendChild(tier_head);
         tier_head.appendChild(tier_name_row);
         tier_head.appendChild(tier_req_row);
