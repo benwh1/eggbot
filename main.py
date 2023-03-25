@@ -116,6 +116,7 @@ async def on_ready():
         channel_id=config.channels.daily_fmc,
         results_channel_id=config.channels.daily_fmc_results,
         duration=86400,
+        align_time=0,
         ping_role=config.roles.fmc,
         warnings=[23*3600],
         warning_messages=["One hour remaining!"],
@@ -130,6 +131,7 @@ async def on_ready():
     fmc_5x5 = FMC(bot,
         channel_id=config.channels.fmc_5x5,
         duration=2*24*60*60,
+        align_time=24*60*60, # just because we happened to start it on an odd-numbered date
         ping_role=config.roles.fmc,
         warnings=[24*60*60, 47*60*60],
         warning_messages=["One day remaining.", "One hour remaining!"],

@@ -9,13 +9,15 @@ from discord.ext import tasks
 from database import db
 
 class FMCRound:
-    def __init__(self, db_path, scramble=None, duration=86400, warnings=[],
+    def __init__(self, db_path, scramble=None, duration=86400, align_time=None, warnings=[],
                  on_close=None, on_warning=None,
                  generator=lambda: scrambler.getScramble(4),
                  solver=lambda x: solver.solve(x, SolverRunType.ONE)):
         self.db_path = db_path + "current/"
         self.scramble = scramble
         self.duration = duration
+        # always make the start time in utc = align_time mod duration
+        self.align_time = align_time
         self.warnings = warnings
         self.on_close = on_close
         self.on_warning  = on_warning
@@ -98,7 +100,10 @@ class FMCRound:
 
         db[self.db_path + "scramble"] = str(scramble)
         db[self.db_path + "solution"] = str(solution)
-        db[self.db_path + "start_time"] = int(time.time())
+        start_time = int(time.time())
+        if self.align_time is not None:
+            start_time = (start_time // self.duration) * self.duration + self.align_time
+        db[self.db_path + "start_time"] = start_time
 
         # initialize warning db entries
         for warning in self.warnings:

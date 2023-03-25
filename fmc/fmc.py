@@ -12,11 +12,12 @@ from fmc.round import FMCRound
 import helper.discord as dh
 
 class FMC:
-    def __init__(self, bot, channel_id, duration, results_channel_id=None, ping_role=None,
+    def __init__(self, bot, channel_id, duration, align_time=None, results_channel_id=None, ping_role=None,
                  warnings=None, warning_messages=None, repeating=False, size=4):
         self.bot = bot
         self.channel = bot.get_channel(channel_id)
         self.duration = duration
+        self.align_time = align_time
         self.warnings = warnings
         self.warning_messages = warning_messages
         self.repeating = repeating
@@ -59,6 +60,7 @@ class FMC:
 
         self.round = FMCRound(self.db_path,
             duration=duration,
+            align_time=align_time,
             warnings=warnings,
             on_close=on_close,
             on_warning=on_warning,
