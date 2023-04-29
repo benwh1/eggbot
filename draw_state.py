@@ -1,7 +1,30 @@
 from PIL import Image, ImageDraw, ImageFont
+import math
+import colorsys
 
-def color(r, g, b):
-    return '#{:02x}{:02x}{:02x}'.format(r, g, b)
+def color(index, total):
+    frac = index / total
+    hue = 330 * frac
+    lum = (0.5 
+        + 0.25 * math.cos(math.tau * (0.65 + hue / 720))
+        + 0.35 * math.exp(-hue/100))
+    r,g,b = colorsys.hls_to_rgb(hue/360, lum, 1)
+    return '#{:02x}{:02x}{:02x}'.format(int(255 * r), int(255 * g), int(255 * b))
+
+def getIndex(width, height, y, x):
+    # wide puzzle, outside of square end region
+    if width - x > height:
+        return x
+    # tall puzzle, outside of square end region
+    if height - y > width:
+        return y
+    # square end region
+    offset = abs(width-height)
+    if width > height: 
+        x -= offset
+    elif height > width: 
+        y -= offset
+    return offset + 2 * min(x, y) + (1 if x < y else 0)
 
 def makeImage(w, h):
     img = Image.new("RGB", (w, h))
@@ -30,30 +53,20 @@ def drawTile(im, draw, xP, yP, col, number):
         im.putalpha(mask)
 
 def draw_state(state):
-    img, draw = makeImage(400, 400)
-
-    tileColors = [color(255, 103, 103),
-                  color(255, 163, 87),
-                  color(255, 241, 83),
-                  color(193, 255, 87),
-                  color(123, 255, 97),
-                  color(107, 255, 149),
-                  color(121, 255, 222),
-                  color(131, 230, 255),
-                  color(139, 178, 255),
-                  color(154, 141, 255),
-                  color(207, 141, 255),
-                  color(255, 133, 251)]
-    colorCords = [[0, 0, 0, 0], [2, 4, 4, 4], [2, 6, 8, 8], [2, 6, 10, 11]]
+    w = state.width()
+    h = state.height()
+    num_colors = w + h - 2
+    
+    img, draw = makeImage(w*100, h*100)
 
     for y in range(state.height()):
         for x in range(state.width()):
             n = state.arr[y][x]
             if n == 0:
-                mycolor = color(0, 0, 0)
+                mycolor = "#000000"
             else:
-                cord = colorCords[(n-1)//4][(n-1)%4]
-                mycolor = tileColors[cord]
+                c_index = getIndex(w,h,*divmod(n-1,w))
+                mycolor = color(c_index,num_colors)
             drawTile(img, draw, x, y, mycolor, n)
 
     return img
