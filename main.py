@@ -21,6 +21,7 @@ import sys
 import requests
 import re
 import regex
+import asyncio
 import bot as bot_helper
 from formatting import time as time_format
 import move
@@ -182,6 +183,7 @@ async def on_ready():
 
     # Start automatic leaderboard updates
     if os.environ["auto_update"] == "1":
+        await asyncio.sleep(7200)
         silent_update.start()
 
 @bot.listen()
