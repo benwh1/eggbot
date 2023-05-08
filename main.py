@@ -698,9 +698,6 @@ async def on_message(message):
     elif command.startswith("!draw"):
         try:
             state = PuzzleState(command[6:])
-            w, h = state.size()
-            if w > 20 or h > 20 or w < 2 or h < 2:
-                raise ValueError(f"puzzle size {state.size()} must be between 2x2 and 20x20")
             img = draw_state(state)
             await dh.send_image(img, "scramble.png", "Your scramble:", message.channel)
         except Exception as e:
@@ -1038,9 +1035,6 @@ async def on_message(message):
                         name = message.author.name
                         await message.channel.send(f"No cheating, {name}!")
                         return
-
-            if video and size != (4, 4):
-                raise ValueError(f"puzzle size {size} must be 4x4")
 
             # try looking up in list of known hard scrambles
             result = solve_db.lookup(scramble)

@@ -53,10 +53,12 @@ def drawTile(im, draw, xP, yP, col, number):
         im.putalpha(mask)
 
 def draw_state(state):
-    w = state.width()
-    h = state.height()
+    w, h = state.size()
+    if w > 20 or h > 20 or w < 2 or h < 2:
+        raise ValueError(f"puzzle size {state.size()} must be between 2x2 and 20x20")
+
     num_colors = w + h - 2
-    
+
     img, draw = makeImage(w*100, h*100)
 
     for y in range(state.height()):

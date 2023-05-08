@@ -5,7 +5,8 @@ from draw_state import draw_state
 
 def make_video(scramble, solution, tps):
     # opencv video writer
-    size = (400, 400)
+    w, h = scramble.size()
+    size = (100*w, 100*h)
     writer = cv2.VideoWriter("movie.webm", cv2.VideoWriter_fourcc(*'VP90'), tps, size)
 
     # create a copy so we don't modify the original
