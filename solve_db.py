@@ -43,3 +43,13 @@ def store(state, solutions, is_all):
         db[db_key] = data
 
     return should_update
+
+def delete(state):
+    data = db[db_key]
+    scramble_str = str(state)
+
+    if scramble_str in data:
+        del data[scramble_str]
+        db[db_key] = data
+        return True
+    return False

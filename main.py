@@ -1189,7 +1189,28 @@ async def on_message(message):
             if stored:
                 await message.channel.send(f"Stored {len(solutions)} solutions")
             else:
-                await message.channel.send(f"Not updated")
+                await message.channel.send("Not updated")
+        except Exception as e:
+            traceback.print_exc()
+            await message.channel.send(f"```\n{repr(e)}\n```")
+    elif command.startswith("!deletesolve"):
+        try:
+            if not permissions.is_egg_admin(message.author):
+                raise Exception("you don't have permission")
+
+            state_reg = regex.puzzle_state("state")
+            reg = re.compile(f"!deletesolve\s+{state_reg}")
+            match = reg.fullmatch(command)
+
+            if match is None:
+                raise SyntaxError("failed to parse arguments")
+
+            groups = match.groupdict()
+            state = PuzzleState(groups["state"])
+            if solve_db.delete(state):
+                await message.channel.send("Deleted solutions")
+            else:
+                await message.channel.send("Nothing to delete")
         except Exception as e:
             traceback.print_exc()
             await message.channel.send(f"```\n{repr(e)}\n```")
