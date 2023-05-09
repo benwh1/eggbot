@@ -329,7 +329,7 @@ async def on_message(message):
                         provisional_msg += f"({user.name}: {distance}/{rounds} = {formatted})\n"
 
             await message.channel.send(results_msg + provisional_msg)
-    elif command.startswith("!delete"):
+    elif command.startswith("!deleteresult"):
         try:
             if not permissions.is_egg_admin(message.author):
                 raise Exception("you don't have permission")
@@ -338,7 +338,7 @@ async def on_message(message):
             game = games[message.channel.id]
 
             scramble_reg = regex.puzzle_state("scramble")
-            reg = re.compile(f"!delete(\s+{scramble_reg})(\s+(?P<user_id>[0-9]+))")
+            reg = re.compile(f"!deleteresult(\s+{scramble_reg})(\s+(?P<user_id>[0-9]+))")
             match = reg.fullmatch(command)
             if match is None:
                 raise SyntaxError(f"failed to parse args")
