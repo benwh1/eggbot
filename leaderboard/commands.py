@@ -13,21 +13,25 @@ import json
 def get_pb(width, height, user, pbtype="time"):
     username = names.find_username(user)
 
+    # formatter + dumb thing
+    if pbtype == "time":
+        formatter = time_format.format
+        pbtype2 = "time"
+    elif pbtype == "move" or pbtype == "moves":
+        formatter = moves_format.format
+        pbtype = "move"
+        pbtype2 = "moves"
+    elif pbtype == "tps":
+        formatter = moves_format.format
+        pbtype2 = "tps"
+    else:
+        raise ValueError("unsupported or invalid `pbtype`")
+
     # get all the relevant data in one leaderboard call
     data = lb.get_leaderboard(width, height, user=username, pbtype=pbtype)
 
     # {category: message text} pairs
     results = {}
-
-    # formatter + dumb thing
-    if pbtype == "time":
-        formatter = time_format.format
-        pbtype2 = "time"
-    elif pbtype == "move":
-        formatter = moves_format.format
-        pbtype2 = "moves"
-    else:
-        raise ValueError("unsupported or invalid `pbtype`")
 
     for result in data:
         result_msg = ""

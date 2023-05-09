@@ -556,7 +556,7 @@ async def on_message(message):
     elif command.startswith("!getpb"):
         try:
             size_reg = regex.size("width", "height", "size")
-            reg = re.compile(f"!getpb(\s+(?P<user>[A-Za-z0-9]+))??(\s+{size_reg})?(\s+(?P<is_moves>moves))?")
+            reg = re.compile(f"!getpb(\s+(?P<user>[A-Za-z0-9]+))??(\s+{size_reg})?(\s+(?P<pbtype>time|moves|tps))?")
             match = reg.fullmatch(command)
 
             if match is None:
@@ -584,10 +584,10 @@ async def on_message(message):
                 else:
                     height = int(groups["height"])
 
-            if groups["is_moves"] is None:
+            if groups["pbtype"] is None:
                 pbtype = "time"
             else:
-                pbtype = "move"
+                pbtype = groups["pbtype"]
 
             msg = lb_commands.get_pb(width, height, user, pbtype=pbtype)
             await message.channel.send(msg)
