@@ -498,61 +498,6 @@ async def on_message(message):
         except Exception as e:
             traceback.print_exc()
             await message.channel.send(f"```\n{repr(e)}\n```")
-    elif command.startswith("!analyse3x3"):
-        try:
-            if len(message.attachments) != 1:
-                raise Exception("no attached file found")
-
-            text = await message.attachments[0].read()
-            text = text.decode()
-
-            # each solve is given as [scramble (optional)] [solution]
-            scr_reg = regex.puzzle_state("scramble")
-            sol_reg = regex.algorithm("solution")
-            reg = re.compile(f"({scr_reg}\s*)?{sol_reg}")
-
-            # solve each scramble and tally up the results
-            results = {}
-            opt_total = 0
-            user_total = 0
-            n = 0
-            for match in reg.finditer(text):
-                n += 1
-
-                groups = match.groupdict()
-
-                solution = Algorithm(groups["solution"])
-                if groups["scramble"] is not None:
-                    scramble = PuzzleState(groups["scramble"])
-                else:
-                    scramble = PuzzleState()
-                    scramble.reset(3)
-                    scramble.apply(solution.inverse())
-
-                opt_len = len(solver.solve(scramble, SolverRunType.ONE))
-                user_len = len(solution)
-
-                opt_total += opt_len
-                user_total += user_len
-
-                diff = user_len - opt_len
-                if diff not in results:
-                    results[diff] = 0
-                results[diff] += 1
-
-            # write message
-            opt_str = format(opt_total/n, ".3f")
-            user_str = format(user_total/n, ".3f")
-            diff_str = format((user_total-opt_total)/n, ".3f")
-
-            msg = f"Optimal mean of {n}: {opt_str}\n"
-            msg += f"Your mean: {user_str} (+{diff_str})\n"
-            msg += "\n".join([f"+{k}: {v}" for (k, v) in sorted(results.items())])
-
-            await message.channel.send(msg)
-        except Exception as e:
-            traceback.print_exc()
-            await message.channel.send(f"```\n{repr(e)}\n```")
     elif command.startswith("!getpb"):
         try:
             size_reg = regex.size("width", "height", "size")
@@ -675,23 +620,93 @@ async def on_message(message):
             traceback.print_exc()
             await message.channel.send(f"```\n{repr(e)}\n```")
     elif command.startswith("!analyse"):
-        await message.channel.send("Working on it!")
         try:
-            contentArray = command.split(" ")
-            solution = Algorithm(contentArray[1])
-            analysis = analyse(solution)
+            size_reg1 = regex.size("width1", "height1", "size1")
+            size_reg2 = regex.size("width2", "height2", "size2")
+            sol_reg = regex.algorithm("solution")
+            reg = re.compile(f"!analyse((?P<single>(\s+{size_reg1})?(\s+{sol_reg}))|(?P<multi>(\s*{size_reg2})))")
 
-            scramble = PuzzleState()
-            scramble.reset(4, 4)
-            scramble.apply(solution.inverse())
-            optSolution = solver.solve(scramble, SolverRunType.ONE)
+            match = reg.fullmatch(command)
+            groups = match.groupdict()
 
-            msg  = f"Scramble: {scramble}\n"
-            msg += f"Your solution [{len(solution)}]: {solution}\n"
-            msg += f"Optimal solution [{len(optSolution)}]: {optSolution}\n"
-            msg += "Analysis:"
+            if groups["single"] is not None:
+                if groups["size1"] is not None:
+                    width = int(groups["width1"])
+                    height = int(groups["height1"])
+                else:
+                    width, height = 4, 4
 
-            await dh.send_as_file(analysis, "analysis.txt", msg, message.channel)
+                solution = Algorithm(groups["solution"])
+
+                scramble = PuzzleState()
+                scramble.reset(width, height)
+                scramble.apply(solution.inverse())
+
+                analysis = analyse(scramble, solution)
+
+                optSolution = solver.solve(scramble, SolverRunType.ONE)
+
+                msg  = f"Scramble: {scramble}\n"
+                msg += f"Your solution [{len(solution)}]: {solution}\n"
+                msg += f"Optimal solution [{len(optSolution)}]: {optSolution}\n"
+                msg += "Analysis:"
+
+                await dh.send_as_file(analysis, "analysis.txt", msg, message.channel)
+            elif groups["multi"] is not None:
+                if len(message.attachments) != 1:
+                    raise Exception("no attached file found")
+
+                text = await message.attachments[0].read()
+                text = text.decode()
+
+                # size
+                width = int(groups["width2"])
+                height = int(groups["height2"])
+
+                # each solve is given as [scramble (optional)] [solution]
+                scr_reg = regex.puzzle_state("scramble")
+                sol_reg = regex.algorithm("solution")
+                reg = re.compile(f"({scr_reg}\s*)?{sol_reg}")
+
+                # solve each scramble and tally up the results
+                results = {}
+                opt_total = 0
+                user_total = 0
+                n = 0
+                for match in reg.finditer(text):
+                    n += 1
+
+                    groups = match.groupdict()
+
+                    solution = Algorithm(groups["solution"])
+                    if groups["scramble"] is not None:
+                        scramble = PuzzleState(groups["scramble"])
+                    else:
+                        scramble = PuzzleState()
+                        scramble.reset(width, height)
+                        scramble.apply(solution.inverse())
+
+                    opt_len = len(solver.solve(scramble, SolverRunType.ONE))
+                    user_len = len(solution)
+
+                    opt_total += opt_len
+                    user_total += user_len
+
+                    diff = user_len - opt_len
+                    if diff not in results:
+                        results[diff] = 0
+                    results[diff] += 1
+
+                # write message
+                opt_str = format(opt_total/n, ".3f")
+                user_str = format(user_total/n, ".3f")
+                diff_str = format((user_total-opt_total)/n, ".3f")
+
+                msg = f"Optimal mean of {n}: {opt_str}\n"
+                msg += f"Your mean: {user_str} (+{diff_str})\n"
+                msg += "\n".join([f"+{k}: {v}" for (k, v) in sorted(results.items())])
+
+                await message.channel.send(msg)
         except Exception as e:
             traceback.print_exc()
             await message.channel.send(f"```\n{repr(e)}\n```")

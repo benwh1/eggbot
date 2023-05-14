@@ -1,14 +1,13 @@
+import copy
 import move
 from prettytable import PrettyTable
 import solver
 from solver import SolverRunType
 from puzzle_state import PuzzleState
 
-def analyse(solution):
-    # get the scramble as the inverse of the solution
-    scramble = PuzzleState()
-    scramble.reset(4, 4)
-    scramble.apply(solution.inverse())
+def analyse(scramble, solution):
+    # copy the scramble
+    scramble = copy.deepcopy(scramble)
 
     table = PrettyTable()
     table.field_names = ["N", "State", "Setup", "Move", "Better", "Your ending", "Better ending", "Your+opt"]
