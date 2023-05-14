@@ -619,12 +619,12 @@ async def on_message(message):
         except Exception as e:
             traceback.print_exc()
             await message.channel.send(f"```\n{repr(e)}\n```")
-    elif command.startswith("!analyse"):
+    elif command.startswith("!analyse") or command.startswith("!analyze"):
         try:
             size_reg1 = regex.size("width1", "height1", "size1")
             size_reg2 = regex.size("width2", "height2", "size2")
             sol_reg = regex.algorithm("solution")
-            reg = re.compile(f"!analyse((?P<single>(\s+{size_reg1})?(\s+{sol_reg}))|(?P<multi>(\s*{size_reg2})))")
+            reg = re.compile(f"!analy(s|z)e((?P<single>(\s+{size_reg1})?(\s+{sol_reg}))|(?P<multi>(\s*{size_reg2})))")
 
             match = reg.fullmatch(command)
             groups = match.groupdict()
