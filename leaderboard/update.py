@@ -91,27 +91,24 @@ def update():
 
     # create a dict of the form {date : data, ...} to be written to data.js
     data_dict = {}
-    for date in dates:
-        # read the data from the database and uncompress it
-        table = db[f"leaderboard/data/{date}"]
 
-        # sort the data and make it into a table of the form
-        # [[user, place, power, results], ...]
-        # that we can compress and write into a js array
-        sorted_table = ranking.sort_table(table)
-        formatted_table = []
-        for i, user in enumerate(sorted_table):
-            # add row but replace None with -1 in the results
-            new_row = [user, i+1, ranking.power(sorted_table[user])]
-            new_row += [x if x is not None else -1 for x in sorted_table[user]]
-            formatted_table.append(new_row)
-        table_str = json.dumps(formatted_table)
+    # sort the data and make it into a table of the form
+    # [[user, place, power, results], ...]
+    # that we can compress and write into a js array
+    sorted_table = ranking.sort_table(table)
+    formatted_table = []
+    for i, user in enumerate(sorted_table):
+        # add row but replace None with -1 in the results
+        new_row = [user, i+1, ranking.power(sorted_table[user])]
+        new_row += [x if x is not None else -1 for x in sorted_table[user]]
+        formatted_table.append(new_row)
+    table_str = json.dumps(formatted_table)
 
-        # compress the table string and convert to base 64
-        compressed_str = zlib.compress(table_str.encode(), level=9)
-        base64_str = base64.b64encode(compressed_str).decode()
+    # compress the table string and convert to base 64
+    compressed_str = zlib.compress(table_str.encode(), level=9)
+    base64_str = base64.b64encode(compressed_str).decode()
 
-        data_dict[date] = base64_str
+    data_dict[today] = base64_str
 
     # write data.js file
     file  = "export const tiers = " + json.dumps(tiers.tiers) + ";\n"
