@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from draw_state import draw_state
 
-def make_video(scramble, solution, tps):
+def make_video(scramble, solution, tps, bypass_limit=False):
     # opencv video writer
     w, h = scramble.size()
     size = (100*w, 100*h)
@@ -14,7 +14,7 @@ def make_video(scramble, solution, tps):
 
     def write_frame():
         # draw the state and send it to the video writer
-        image = draw_state(pos)
+        image = draw_state(pos, bypass_limit=bypass_limit)
         cv2_image = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
         writer.write(cv2_image)
 

@@ -52,9 +52,9 @@ def drawTile(im, draw, xP, yP, col, number):
         drawSquare(mask_d, x, y, size, 0)
         im.putalpha(mask)
 
-def draw_state(state):
+def draw_state(state, bypass_limit=False):
     w, h = state.size()
-    if w > 20 or h > 20 or w < 2 or h < 2:
+    if (w > 20 or h > 20 or w < 2 or h < 2) and not bypass_limit:
         raise ValueError(f"puzzle size {state.size()} must be between 2x2 and 20x20")
 
     num_colors = w + h - 2

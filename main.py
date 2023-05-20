@@ -223,6 +223,8 @@ async def on_message(message):
     log.info(f"found command from user {message.author}")
     log.info(f"command: {command}")
 
+    is_egg_admin = permissions.is_egg_admin(message.author)
+
     if command.startswith("!fmc"):
         if message.channel.id not in fmcs:
             return
@@ -331,7 +333,7 @@ async def on_message(message):
             await message.channel.send(results_msg + provisional_msg)
     elif command.startswith("!deleteresult"):
         try:
-            if not permissions.is_egg_admin(message.author):
+            if not is_egg_admin:
                 raise Exception("you don't have permission")
 
             games = dict(list(fmcs.items()) + [(movesgame.channel.id, movesgame), (optimal_game.channel.id, optimal_game)])
@@ -354,7 +356,7 @@ async def on_message(message):
             traceback.print_exc()
             await message.channel.send(f"```\n{repr(e)}\n```")
     elif command.startswith("!setsolution"):
-        if not permissions.is_egg_admin(message.author):
+        if not is_egg_admin:
             return
         if message.channel.id not in fmcs:
             return
@@ -589,7 +591,7 @@ async def on_message(message):
             moves = Algorithm(groups["moves"])
             num_moves = len(moves)
             max_moves = 250
-            if num_moves > max_moves:
+            if num_moves > max_moves and not is_egg_admin:
                 raise ValueError(f"number of moves ({num_moves}) must be at most {max_moves}")
 
             # if no scramble given, use the inverse of the moves
@@ -614,7 +616,7 @@ async def on_message(message):
             msg += f"TPS (playback): {tps}\n"
             msg += f"Time (playback): {time}"
 
-            make_video(scramble, moves, tps)
+            make_video(scramble, moves, tps, bypass_limit=is_egg_admin)
             await dh.send_binary_file("movie.webm", msg, message.channel)
         except Exception as e:
             traceback.print_exc()
@@ -713,7 +715,7 @@ async def on_message(message):
     elif command.startswith("!draw"):
         try:
             state = PuzzleState(command[6:])
-            img = draw_state(state)
+            img = draw_state(state, bypass_limit=is_egg_admin)
             await dh.send_image(img, "scramble.png", "Your scramble:", message.channel)
         except Exception as e:
             traceback.print_exc()
@@ -751,7 +753,7 @@ async def on_message(message):
                 num_solves = int(groups["num_solves"])
 
             # limit on the number of solves
-            if num_solves > 1000:
+            if num_solves > 1000 and not is_egg_admin:
                 raise ValueError("number of solves must be at most 1000")
 
             # read the size
@@ -1153,7 +1155,7 @@ async def on_message(message):
             traceback.print_exc()
             await message.channel.send(f"```\n{repr(e)}\n```")
     elif command.startswith("!link"):
-        if not permissions.is_egg_admin(message.author):
+        if not is_egg_admin:
             return
         try:
             reg = re.compile(f"!link\s+(?P<user_id>[0-9]+)\s+(?P<lb_username>[a-zA-Z0-9]+)")
@@ -1174,7 +1176,7 @@ async def on_message(message):
             await message.channel.send(f"```\n{repr(e)}\n```")
     elif command.startswith("!addsolve"):
         try:
-            if not permissions.is_egg_admin(message.author):
+            if not is_egg_admin:
                 raise Exception("you don't have permission")
 
             if len(message.attachments) != 1:
@@ -1210,7 +1212,7 @@ async def on_message(message):
             await message.channel.send(f"```\n{repr(e)}\n```")
     elif command.startswith("!deletesolve"):
         try:
-            if not permissions.is_egg_admin(message.author):
+            if not is_egg_admin:
                 raise Exception("you don't have permission")
 
             state_reg = regex.puzzle_state("state")
@@ -1252,7 +1254,7 @@ async def on_message(message):
     elif command.startswith("!help"):
         await message.channel.send("Egg bot commands: https://github.com/benwh1/eggbot/blob/master/README.md")
     elif command.startswith("!restart"):
-        if permissions.is_egg_admin(message.author):
+        if is_egg_admin:
             await message.channel.send("Restarting...")
             db["restart/channel_id"] = message.channel.id
             db["restart/message"] = "Restarted"
