@@ -71,16 +71,16 @@ class Solver:
         return self.solve(scramble, mode=SolverRunType.ALL)
 
 solvers = {
-    (2, 2): Solver(2, 2),
-    (3, 2): Solver(3, 2),
-    (4, 2): Solver(4, 2),
-    (5, 2): Solver(5, 2),
-    (6, 2): Solver(6, 2),
-    (7, 2): Solver(7, 2),
-    (8, 2): Solver(8, 2),
+    (2, 2): Solver(2, 2, keep_alive=True),
+    (3, 2): Solver(3, 2, keep_alive=True),
+    (4, 2): Solver(4, 2, keep_alive=True),
+    (5, 2): Solver(5, 2, keep_alive=True),
+    (6, 2): Solver(6, 2, keep_alive=True),
+    (7, 2): Solver(7, 2, keep_alive=True),
+    (8, 2): Solver(8, 2, keep_alive=True),
     (3, 3): Solver(3, 3, keep_alive=True),
-    (4, 3): Solver(4, 3),
-    (5, 3): Solver(5, 3),
+    (4, 3): Solver(4, 3, keep_alive=True),
+    (5, 3): Solver(5, 3, keep_alive=True),
     (4, 4): Solver(4, 4, keep_alive=True)
 }
 
