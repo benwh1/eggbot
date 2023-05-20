@@ -2,6 +2,7 @@ import copy
 import cv2
 import numpy as np
 from draw_state import draw_state
+from log import log
 
 def make_video(scramble, solution, tps, bypass_limit=False):
     # opencv video writer
@@ -22,7 +23,10 @@ def make_video(scramble, solution, tps, bypass_limit=False):
     write_frame()
 
     # draw the rest of the frames
-    for i in range(len(solution)):
+    n = len(solution)
+    for i in range(n):
+        if i % 10 == 0:
+            log.info(f"Frame {i}/{n}")
         pos.move(solution.at(i))
         write_frame()
 
