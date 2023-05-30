@@ -3,3 +3,7 @@ tables/*
 pyproject.toml
 poetry.lock
 web/data.js
+.env
+egg.db
+log.log
+movie.webm
