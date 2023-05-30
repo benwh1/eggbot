@@ -220,7 +220,7 @@ async def on_message(message):
         return
     command = command_lines[0]
 
-    log.info(f"found command from user {message.author}")
+    log.info(f"found command from user {message.author} in channel {message.channel} (id={message.channel.id})")
     log.info(f"command: {command}")
 
     is_egg_admin = permissions.is_egg_admin(message.author)
