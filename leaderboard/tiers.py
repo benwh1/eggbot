@@ -51,3 +51,15 @@ def power_tier(power):
             return tier
 
     return None
+
+def true_tier(results_list):
+    min_tier = None
+    for i, result in enumerate(results_list):
+        tier = result_tier(i, result)
+        if tier is None:
+            return get_tier("Unranked")
+        if min_tier is None:
+            min_tier = tier
+        elif min_tier["power"] > tier["power"]:
+            min_tier = tier
+    return min_tier

@@ -112,8 +112,10 @@ def rank(user):
     position = ranking.place(table, username)
     power = ranking.power(table[username])
     power_tier = tiers.power_tier(power)
+    true_tier = tiers.true_tier(table[username])
     name = power_tier["name"]
-    msg = f"{username} is in position {position} with {power} power ({name})"
+    true_name = true_tier["name"]
+    msg = f"{username} is in position {position} with {power} power ({name}, True {true_name})"
 
     next_tier = helper.get_next_tier(power_tier)
     if next_tier is not None:
