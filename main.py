@@ -187,6 +187,10 @@ async def on_ready():
         silent_update.start()
 
 @bot.listen()
+async def on_member_join(member):
+    await member.send("Welcome to Speedsliding! Please read https://discord.com/channels/800441014611214337/888027681063583794 to get access to the server.")
+
+@bot.listen()
 async def on_message(message):
     if message.author.bot:
         return
