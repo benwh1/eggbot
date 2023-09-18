@@ -8,6 +8,7 @@ from leaderboard import commands_helper as helper
 import leaderboard.username as names
 from formatting import time as time_format
 from formatting import moves as moves_format
+from formatting import tps as tps_format
 import json
 
 def get_pb(width, height, user, pbtype="time"):
@@ -22,7 +23,7 @@ def get_pb(width, height, user, pbtype="time"):
         pbtype = "move"
         pbtype2 = "moves"
     elif pbtype == "tps":
-        formatter = moves_format.format
+        formatter = tps_format.format
         pbtype2 = "tps"
     else:
         raise ValueError("unsupported or invalid `pbtype`")
