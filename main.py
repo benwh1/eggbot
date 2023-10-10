@@ -228,6 +228,7 @@ async def on_message(message):
     log.info(f"command: {command}")
 
     is_egg_admin = permissions.is_egg_admin(message.author)
+    is_egg_moderator = permissions.is_egg_moderator(message.author) or is_egg_admin
 
     if command.startswith("!fmc"):
         if message.channel.id not in fmcs:
@@ -1159,7 +1160,7 @@ async def on_message(message):
             traceback.print_exc()
             await message.channel.send(f"```\n{repr(e)}\n```")
     elif command.startswith("!link"):
-        if not is_egg_admin:
+        if not is_egg_moderator:
             return
         try:
             reg = re.compile(f"!link\s+(?P<user_id>[0-9]+)\s+(?P<lb_username>[a-zA-Z0-9]+)")

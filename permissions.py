@@ -14,3 +14,12 @@ def is_egg_admin(user):
 
     admins = db[key]
     return user.id in admins
+
+def is_egg_moderator(user):
+    key = "permissions/egg_moderator"
+
+    if key not in db:
+        db[key] = [owner_id]
+
+    moderators = db[key]
+    return user.id in moderators
