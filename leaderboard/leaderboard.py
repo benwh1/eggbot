@@ -15,7 +15,7 @@ def get_leaderboard(width=-1, height=-1, solvetype="any", avglen=-1, pbtype="tim
         "user"        : user,
         "solvedata"   : 0,
         "version"     : "29.0"
-    }, timeout=5
+    }, timeout=15
     )
 
     if r.text[-7:] != "success":
