@@ -580,11 +580,12 @@ async def on_message(message):
             await message.channel.send(f"```\n{repr(e)}\n```")
     elif command.startswith("!animate"):
         try:
-            # !animate [optional scramble] [solution] [optional tps]
+            # !animate ([optional scramble] | [size]) [solution] [optional tps]
             scr_reg = regex.puzzle_state("scramble")
-            mov_reg = regex.algorithm("moves")
+            size_reg = regex.size("width", "height", "size")
+            mov_reg = regex.optionally_spoilered(regex.algorithm("moves"))
             tps_reg = regex.positive_integer("tps")
-            reg = re.compile(f"!animate\s*{scr_reg}?\s*{mov_reg}\s*{tps_reg}?")
+            reg = re.compile(f"!animate\s*({scr_reg}|{size_reg})?\s+{mov_reg}(\s+{tps_reg})?")
             match = reg.fullmatch(command)
 
             if match is None:
@@ -600,12 +601,20 @@ async def on_message(message):
                 raise ValueError(f"number of moves ({num_moves}) must be at most {max_moves}")
 
             # if no scramble given, use the inverse of the moves
-            if groups["scramble"] is None:
-                scramble = PuzzleState()
-                scramble.reset(4, 4)
-                scramble.apply(moves.inverse())
-            else:
+            if groups["scramble"] is not None:
                 scramble = PuzzleState(groups["scramble"])
+            else:
+                scramble = PuzzleState()
+                if groups["size"] is not None:
+                    width = int(groups["width"])
+                    if groups["height"] is None:
+                        height = width
+                    else:
+                        height = int(groups["height"])
+                else:
+                    width, height = 4, 4
+                scramble.reset(width, height)
+                scramble.apply(moves.inverse())
 
             # if no tps given, use 8 as a default
             if groups["tps"] is None:
