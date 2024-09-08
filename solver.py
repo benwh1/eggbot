@@ -3,6 +3,7 @@ from log import log
 import subprocess
 import os
 from algorithm import Algorithm
+import solver_5x5
 
 class SolverRunType(Enum):
     ONE = "one"
@@ -103,5 +104,9 @@ def solve(puzzle, mode):
             return transposed_sols[0]
         else:
             return transposed_sols
+    elif (w, h) == (5, 5):
+        if mode != SolverRunType.ONE:
+            raise ValueError("5x5 solver only supports one solution")
+        return solver_5x5.solve(puzzle)
     else:
         raise Exception(f"{w}x{h} solver not available")

@@ -1033,6 +1033,8 @@ async def on_message(message):
                     elapsed = None
 
             if solutions is None:
+                if size == (5, 5) and not is_egg_admin:
+                    raise Exception("you don't have permission")
                 a = perf_counter()
                 solutions = solver.solve(scramble, SolverRunType.ALL)
                 b = perf_counter()
@@ -1073,6 +1075,8 @@ async def on_message(message):
                 solution = result["solutions"][0]
                 elapsed = None
             else:
+                if size == (5, 5) and not is_egg_admin:
+                    raise Exception("you don't have permission")
                 a = perf_counter()
                 solution = solver.solve(scramble, SolverRunType.ONE)
                 b = perf_counter()
