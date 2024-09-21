@@ -584,7 +584,7 @@ async def on_message(message):
             scr_reg = regex.puzzle_state("scramble")
             size_reg = regex.size("width", "height", "size")
             mov_reg = regex.optionally_spoilered(regex.algorithm("moves"))
-            tps_reg = regex.positive_integer("tps")
+            tps_reg = regex.positive_real("tps")
             reg = re.compile(f"!animate\s*({scr_reg}|{size_reg})?\s+{mov_reg}(\s+{tps_reg})?")
             match = reg.fullmatch(command)
 
@@ -620,7 +620,7 @@ async def on_message(message):
             if groups["tps"] is None:
                 tps = 8
             else:
-                tps = int(groups["tps"])
+                tps = float(groups["tps"])
             time = round(num_moves/tps, 3)
 
             await message.channel.send("Working on it! It may take some time, please wait")
